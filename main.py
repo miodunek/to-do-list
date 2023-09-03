@@ -2,44 +2,59 @@ from datetime import datetime
 import os
 
 task_list = {}
+next_index = 1
 
 
 def display_menu():
     print("1. Add a task\t 2. Show tasks\t 3. Mark as completed\t 4. Quit")
 
 
-# def load_tasks_from_file():
-#     file = "to-do-list.txt"
-#     if os.path.exists(file):
-#         with open(file, "r") as file:
-#             for line in file:
-#                 parts = line.strip().split('.')
-#                 if len(parts) == 4:
-#                     index, rest = parts
-#                     task, time, completed = rest.split(', ')
-#                     task_list[int(index)] = {"task": task, "time": time, "completed": completed}
+def load_tasks_from_file():
+    global next_index
+    file = "to-do-list.txt"
+    if os.path.exists(file):
+        with open(file, "r") as file:
+            for line in file:
+                parts = line.strip().split('. ')
+                if len(parts) == 2:
+                    index, rest = parts
+                    task, time, completed = rest.split(', ')
+                    index = int(index)
+                    task_list[index] = {"index": index, "task": task, "time": time, "completed": completed}
+                    next_index = max(next_index, index + 1)
 
 
 def save_to_file():
     file = "to-do-list.txt"
-    with open(file, "w") as file:
+    with open(file, "a") as file:
         for index, task_info in task_list.items():
-            task_str = f"{index}. {task_info['task']}, {task_info['time']}, {task_info['completed']}\n"
+            if 'index' not in task_info:
+                task_info['index'] = index
+            task_str = f"{task_info['index']}. {task_info['task']}, {task_info['time']}, {task_info['completed']}\n"
             file.write(task_str)
 
 
 def add_task():
+    global next_index
     task = input("Add a task: ")
     time = str(datetime.now())
-    index = len(task_list)
+    index = next_index
     task_list[index] = {"task": task, "time": time, "completed": "Not completed"}
+    next_index += 1
     save_to_file()
     print("Task added!")
 
 
 def display_tasks():
-    for index, task_info in task_list.items():
-        print(f"{index}. Task: {task_info['task']}, Time: {task_info['time']}, Status: {task_info['completed']}")
+    for task_info in sorted(
+            task_list.values(),
+            key=lambda x: x['index']
+    ):
+        print(
+            f"{task_info['index']}. Task: {task_info['task']}, "
+            f"Time: {task_info['time']}, "
+            f"Status: {task_info['completed']}"
+        )
 
 
 def mark_done():
@@ -52,7 +67,7 @@ def mark_done():
         print("Task not found!")
 
 
-# load_tasks_from_file()
+load_tasks_from_file()
 
 while True:
     display_menu()
