@@ -13,7 +13,7 @@ Simple To-Do List program for Summer Of Code week 3 exercise: https://www.flyner
 ## Getting Started
 Make sure you have Python installed on your computer.
 
-1. Download the to-do-list.py and to-do-list.txt files to your computer.
+1. Download the main.py and to-do-list.txt files to your computer.
 
 2. Open a terminal
 
