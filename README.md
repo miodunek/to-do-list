@@ -21,7 +21,7 @@ Make sure you have Python installed on your computer.
 
 4. Run the program by executing the following command:
 ```
-python to-do-list.py
+python main.py
 ```
 
 ## How to use
